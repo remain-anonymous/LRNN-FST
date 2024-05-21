@@ -136,10 +136,8 @@ class ParallelRNNBlock(nn.Module):
     def __init__(self, input_dim=768, out_dim=1, seq_size=512, hid_feature_size=512, hid_seq_size=512, transformer_nhead=None, hid_rnn_size=512, blocks=3, dropout=0.2, seq_expansion= 1, FST=True, transformer= False):
         super(ParallelRNNBlock, self).__init__()
     
-        print(seq_size, input_dim )
         self.pos_encoder = PositionalEncoding(seq_size=seq_size,  feature_size=input_dim)
        
-
         if FST == False and transformer==False:
             
             self.mlp_in = nn.Sequential(
@@ -278,17 +276,6 @@ class ParallelRNNBlock(nn.Module):
 
 
 def accuracy(predictions, targets, threshold=0.5):
-    """
-    Compute accuracy given model outputs (predictions) and targets.
-    
-    Args:
-        predictions (torch.Tensor): The output predictions from the model.
-        targets (torch.Tensor): The true labels.
-        threshold (float, optional): The threshold to convert predictions to binary labels. Defaults to 0.5.
-
-    Returns:
-        float: The accuracy of the predictions.
-    """
     # Convert predictions to binary (0 or 1) based on threshold
     pred_labels = (predictions >= threshold).float()
 
@@ -302,16 +289,6 @@ def accuracy(predictions, targets, threshold=0.5):
 
 def roc_score(predictions, targets):
     with torch.no_grad():
-        """
-        Compute ROC (Receiver Operating Characteristic) AUC score given model outputs (predictions) and targets.
-
-        Args:
-            predictions (torch.Tensor): The output predictions from the model. These should be probabilities, not binary labels.
-            targets (torch.Tensor): The true labels.
-
-        Returns:
-            float: The ROC AUC score of the predictions.
-        """
         # Validate that predictions are in the form of probabilities
         if predictions.min() < 0 or predictions.max() > 1:
             raise ValueError("Predictions should be probabilities ranging from 0 to 1.")
